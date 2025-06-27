@@ -12,7 +12,7 @@ const salt = 10;
 app.use(express.json());
 app.use(cookie());
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['https://frontend-todo-mauve.vercel.app/'],
     methods: ['GET', 'POST'],
     credentials: true
 }));
@@ -111,6 +111,8 @@ app.post('/notes', verifyUser, (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log('server running');
 });
