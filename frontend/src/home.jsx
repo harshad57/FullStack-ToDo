@@ -15,13 +15,13 @@ function Home() {
 
     useEffect(() => {
     setLoading(true);
-    axios.get('http://localhost:3000')
+    axios.get('https://fullstack-todo-ilbx.onrender.com')
         .then(res => {
             if (res.data.Status === "OK") {
                 setAuth(true);
                 setName(res.data.name);
 
-                axios.get('http://localhost:3000/notes')
+                axios.get('https://fullstack-todo-ilbx.onrender.com/notes')
                     .then(noteRes => {
                         if (noteRes.data.notes) {
                             setNotes(noteRes.data.notes);
@@ -47,7 +47,7 @@ function Home() {
 
 
     const logout = () => {
-        axios.get('http://localhost:3000/logout')
+        axios.get('https://fullstack-todo-ilbx.onrender.com/logout')
             .then(() => {
                 window.location.reload(true);
             }).catch(() => setMsg('Logout failed'));
@@ -60,7 +60,7 @@ function Home() {
         return;
     }
 
-    axios.post('http://localhost:3000/notes', { notes: noteInput })
+    axios.post('https://fullstack-todo-ilbx.onrender.com/notes', { notes: noteInput })
         .then(res => {
             if (res.data.error) {
                 setNoteMsg(res.data.error);

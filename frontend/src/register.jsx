@@ -18,7 +18,7 @@ function Register() {
     function handlesubmit(e) {
         e.preventDefault();
 
-        axios.post('http://localhost:3000/register', values)
+        axios.post('https://fullstack-todo-ilbx.onrender.com/register', values)
             .then(res => {
                 if (res.data.Status === "OK") {
                     setmsg1('Login successful');
