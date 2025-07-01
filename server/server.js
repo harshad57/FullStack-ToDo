@@ -1,5 +1,5 @@
 const express = require('express');
-const {Pool} = require('pg');
+const { Pool } = require('pg');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -68,7 +68,11 @@ app.post('/login', (req, res) => {
             }
 
             const token = jwt.sign({ name: data.rows[0].name }, process.env.JWT_SECRET, { expiresIn: '1d' });
-            res.cookie('token', token);
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "None"
+            })
             return res.json({ Status: "OK" });
         });
     });
@@ -102,7 +106,7 @@ app.post('/notes', verifyUser, (req, res) => {
         if (err || data.rows.length === 0) {
             return res.json({ error: "User not found" });
         }
-        
+
         const name = req.name;
         const userId = data.rows[0].id;
         const insertSql = "INSERT INTO public.notes (note, user_id, name) VALUES ($1,$2,$3) RETURNING id";
