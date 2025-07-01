@@ -39,7 +39,7 @@ function Login() {
 
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 border border-gray-500 rounded-lg shadow-md bg-white">
+    <div className="max-w-md mx-auto mt-10 border border-gray-500 rounded-lg shadow-md bg-white">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         {msg && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center">{msg}</div>}
