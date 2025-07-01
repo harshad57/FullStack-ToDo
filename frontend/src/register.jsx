@@ -18,7 +18,7 @@ function Register() {
     function handlesubmit(e) {
         e.preventDefault();
 
-        axios.post('https://fullstack-todo-ilbx.onrender.com/register', values)
+        axios.post('http://localhost:3000/register', values)
             .then(res => {
                 if (res.data.Status === "OK") {
                     setmsg1('Login successful');
@@ -26,11 +26,9 @@ function Register() {
                 }
                 if (res.data.error === "Registration failed") {
                     setmsg('This email was already registered');
-                    setvalues({ name: '', email: '', password: '' });
                 }
                 if (res.data.error === "Hashing failed") {
                     setmsg('Error while creating your account');
-                    setvalues({ name: '', email: '', password: '' });
                 }
             })
             .catch(err => console.log(err));

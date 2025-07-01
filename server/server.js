@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const {Pool} = require('pg');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -17,12 +17,15 @@ app.use(cors({
     credentials: true
 }));
 
-const db = mysql.createConnection({
+const db = new Pool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
+
+db.connect().then(() => console.log('connected'));
 
 const verifyUser = (req, res, next) => {
     const token = req.cookies.token;
@@ -44,7 +47,7 @@ app.post('/register', (req, res) => {
     bcrypt.hash(password.toString(), salt, (err, hash) => {
         if (err) return res.json({ error: "Hashing failed" });
 
-        const sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
+        const sql = "INSERT INTO public.user (name, email, password) VALUES ($1,$2,$3)";
         db.query(sql, [name, email, hash], (err, result) => {
             if (err) return res.json({ error: "Registration failed" });
             return res.json({ Status: "OK" });
@@ -54,22 +57,21 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
-    const sql = "SELECT * FROM user WHERE email = ?";
+    const sql = "SELECT * FROM public.user WHERE email = $1";
     db.query(sql, [email], (err, data) => {
         if (err) return res.json({ error: "Login error" });
-        if (data.length === 0) return res.json({ error: "User not found" });
+        if (data.rows.length === 0) return res.json({ error: "User not found" });
 
-        bcrypt.compare(password.toString(), data[0].password, (err, result) => {
+        bcrypt.compare(password.toString(), data.rows[0].password, (err, result) => {
             if (err || !result) {
                 return res.json({ error: "incorrect" });
             }
 
-            const token = jwt.sign({ name: data[0].name }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign({ name: data.rows[0].name }, process.env.JWT_SECRET, { expiresIn: '1d' });
             res.cookie('token', token);
             return res.json({ Status: "OK" });
         });
     });
-    console.log(res)
 });
 
 app.get('/logout', (req, res) => {
@@ -79,13 +81,13 @@ app.get('/logout', (req, res) => {
 
 app.get('/notes', verifyUser, (req, res) => {
     const sql = `
-        SELECT n.note FROM notes n
-        JOIN user u ON n.user_id = u.id
-        WHERE u.name = ?
+        SELECT n.note FROM public.notes n
+        JOIN public.user u ON n.user_id = u.id
+        WHERE u.name = $1
     `;
     db.query(sql, [req.name], (err, data) => {
         if (err) return res.json({ error: "Failed to fetch notes" });
-        return res.json({ notes: data.map(row => row.note) });
+        return res.json({ notes: data.rows.map(row => row.note) });
     });
 });
 
@@ -95,23 +97,23 @@ app.post('/notes', verifyUser, (req, res) => {
         return res.json({ error: "Note cannot be empty" });
     }
 
-    const getUserSql = "SELECT id FROM user WHERE name = ?";
+    const getUserSql = "SELECT id FROM public.user WHERE name = $1";
     db.query(getUserSql, [req.name], (err, data) => {
-        if (err || data.length === 0) {
+        if (err || data.rows.length === 0) {
             return res.json({ error: "User not found" });
         }
         
         const name = req.name;
-        const userId = data[0].id;
-        const insertSql = "INSERT INTO notes (note, user_id, name) VALUES (?, ?, ?)";
+        const userId = data.rows[0].id;
+        const insertSql = "INSERT INTO public.notes (note, user_id, name) VALUES ($1,$2,$3) RETURNING id";
         db.query(insertSql, [note, userId, name], (err, result) => {
             if (err) return res.json({ error: "Failed to add note" });
-            return res.json({ Status: "OK", noteId: result.insertId });
+            return res.json({ Status: "OK", noteId: result.rows[0].id });
         });
     });
 });
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log('server running');

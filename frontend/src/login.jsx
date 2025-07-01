@@ -18,7 +18,7 @@ function Login() {
   const handlesubmit = (e) => {
     e.preventDefault();
 
-    axios.post('https://fullstack-todo-ilbx.onrender.com/login', values)
+    axios.post('http://localhost:3000/login', values)
       .then(res => {
         if (res.data.Status === "OK") {
           setmsg1('Login successful');
@@ -26,15 +26,12 @@ function Login() {
         }
         if (res.data.error === "User not found") {
           setmsg('User not found, please register first');
-          setvalues({ email: '', password: '' });
         }
         if (res.data.error === "incorrect") {
           setmsg('Incorrect password or email id');
-          setvalues({ email: '', password: '' });
         }
         if (res.data.error === "Login error") {
           setmsg('Login error, please try again');
-          setvalues({ email: '', password: '' });
         }
       })
       .catch(err => console.log(err));
