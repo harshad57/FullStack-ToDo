@@ -79,7 +79,12 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token',{
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        path: "/"
+    });
     return res.json({ Status: "OK" });
 });
 
