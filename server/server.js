@@ -117,7 +117,10 @@ app.post('/notes', verifyUser, (req, res) => {
         const insertSql = "INSERT INTO public.notes (note, user_id, name) VALUES ($1,$2,$3) RETURNING id";
         db.query(insertSql, [note, userId, name], (err, result) => {
             if (err) return res.json({ error: "Failed to add note" });
-            return res.json({ Status: "OK", noteId: result.rows[0].id });
+            return res.json({ Status: "OK", notes: {
+                id: result.rows[0].id,
+                note: req.body.notes
+        }});
         });
     });
 });

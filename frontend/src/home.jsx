@@ -66,7 +66,7 @@ function Home() {
             if (res.data.error) {
                 setNoteMsg(res.data.error);
             } else {
-                setNotes(prev => [...prev, noteInput]);
+                setNotes(prev => [...prev, res.data.notes]);
                 setNoteInput('');
                 setNoteMsg1('Note added !');
                 setTimeout(() => setNoteMsg1(''), 1500);
