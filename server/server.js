@@ -90,7 +90,7 @@ app.get('/logout', (req, res) => {
 
 app.get('/notes', verifyUser, (req, res) => {
     const sql = `
-        SELECT n.note FROM public.notes n
+        SELECT n.id,n.note FROM public.notes n
         JOIN public.user u ON n.user_id = u.id
         WHERE u.name = $1
     `;
