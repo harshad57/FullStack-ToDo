@@ -142,12 +142,12 @@ const handledelete = (id) => {
                                 {notes.length === 0 ? (
                                     <li className="text-gray-400 text-center">No notes yet.</li>
                                 ) : (
-                                    notes.map((note, idx) => (
-                                        <li key={idx} className="relative bg-blue-50 px-4 py-2 rounded shadow text-gray-700">
-                                            <span>{note}</span>
+                                    notes.map((note) => (
+                                        <li key={note.id} className="relative bg-blue-50 px-4 py-2 rounded shadow text-gray-700">
+                                            <span>{note.note}</span>
                                             <button
-                                                className="absolute left-3 ml-4 bg-red-600 hover:bg-red-800 text-white"
-                                                onClick={() => handledelete(idx)}
+                                                className="absolute right-1 ml-4 px-2 py-1 rounded bg-red-600 hover:bg-red-800 text-white"
+                                                onClick={() => handledelete(note.id)}
                                             >
                                                 Delete
                                             </button>

@@ -96,7 +96,7 @@ app.get('/notes', verifyUser, (req, res) => {
     `;
     db.query(sql, [req.name], (err, data) => {
         if (err) return res.json({ error: "Failed to fetch notes" });
-        return res.json({ notes: data.rows.map(row => row.note) });
+        return res.json({ notes: data.rows});
     });
 });
 
