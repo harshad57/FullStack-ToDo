@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookie());
 app.use(cors({
     origin: ['https://frontend-todo-mauve.vercel.app'],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     credentials: true
 }));
 
