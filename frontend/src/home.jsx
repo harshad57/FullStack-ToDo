@@ -146,7 +146,7 @@ const handledelete = (id) => {
                                         <li key={note.id} className="relative bg-blue-50 px-4 py-3 rounded shadow text-gray-700">
                                             <span>{note.note}</span>
                                             <button
-                                                className="absolute right-2 ml-4 px-2 py-1 rounded bg-red-600 hover:bg-red-800 text-white"
+                                                className="absolute right-2 ml-4 px-2 py-0.5 rounded bg-red-600 hover:bg-red-800 text-white"
                                                 onClick={() => handledelete(note.id)}
                                             >
                                                 Delete
