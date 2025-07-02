@@ -122,6 +122,15 @@ app.post('/notes', verifyUser, (req, res) => {
     });
 });
 
+app.delete('/notes/:id', verifyUser, (req, res) => {
+    const noteId = req.params.id;
+    const sql = "DELETE FROM public.notes WHERE id = $1 RETURNING id";
+    db.query(sql, [noteId], (err, result) => {
+        if (err) return res.json({ error: "Failed to delete note" });
+        return res.json({ Status: "OK", noteId: result.rows[0].id });
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

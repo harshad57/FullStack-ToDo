@@ -26,12 +26,15 @@ function Login() {
         }
         if (res.data.error === "User not found") {
           setmsg('User not found, please register first');
+          setTimeout(() => setmsg(''), 1500);
         }
         if (res.data.error === "incorrect") {
           setmsg('Incorrect password or email id');
+          setTimeout(() => setmsg(''), 1500);
         }
         if (res.data.error === "Login error") {
           setmsg('Login error, please try again');
+          setTimeout(() => setmsg(''), 1500);
         }
       })
       .catch(err => console.log(err));

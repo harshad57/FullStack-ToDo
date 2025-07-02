@@ -78,6 +78,19 @@ function Home() {
         });
 };
 
+const handledelete = (id) => {
+    axios.delete(`https://fullstack-todo-ilbx.onrender.com/notes/${id}`)
+        .then(res => {
+            if (res.data.error) {
+                setNoteMsg(res.data.error);
+            } else {
+                setNotes(prev => prev.filter(note => note.id !== id));
+                setNoteMsg1('Note deleted !');
+                setTimeout(() => setNoteMsg1(''), 1500);
+            }
+        })
+}
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
@@ -130,8 +143,14 @@ function Home() {
                                     <li className="text-gray-400 text-center">No notes yet.</li>
                                 ) : (
                                     notes.map((note, idx) => (
-                                        <li key={idx} className="bg-blue-50 px-4 py-2 rounded shadow text-gray-700">
-                                            {note}
+                                        <li key={idx} className="relative bg-blue-50 px-4 py-2 rounded shadow text-gray-700">
+                                            <span>{note}</span>
+                                            <button
+                                                className="absolute left-3 ml-4 bg-red-600 hover:bg-red-800 text-white"
+                                                onClick={() => handledelete(idx)}
+                                            >
+                                                Delete
+                                            </button>
                                         </li>
                                     ))
                                 )}
