@@ -26,11 +26,11 @@ function Register() {
                 }
                 if (res.data.error === "Registration failed") {
                     setmsg('This email was already registered');
-                    setTimeout(() => setmsg(''), 1500);
+                    setTimeout(() => setmsg(''), 2500);
                 }
                 if (res.data.error === "Hashing failed") {
                     setmsg('Error while creating your account');
-                    setTimeout(() => setmsg(''), 1500);
+                    setTimeout(() => setmsg(''), 2500);
                 }
             })
             .catch(err => console.log(err));
